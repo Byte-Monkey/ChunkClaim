@@ -173,24 +173,7 @@ public class ChunkClaim extends JavaPlugin {
 
 	}
 
-	public OfflinePlayer resolvePlayer(String name) {
 
-		Player player = this.getServer().getPlayer(name);
-		if (player != null)
-			return player;
-
-		// then search offline players
-		OfflinePlayer[] offlinePlayers = this.getServer().getOfflinePlayers();
-		for (int i = 0; i < offlinePlayers.length; i++) {
-			if (offlinePlayers[i].getName().equalsIgnoreCase(name)) {
-				return offlinePlayers[i];
-			}
-		}
-
-		// if none found, return null
-		return null;
-
-	}
 
 	public static void addLogEntry(String entry) {
 		logger.info("ChunkClaim: " + entry);
