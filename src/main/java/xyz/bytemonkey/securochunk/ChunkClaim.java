@@ -212,12 +212,6 @@ public class ChunkClaim extends JavaPlugin {
 	}
 
     public OfflinePlayer resolvePlayer(String name) {
-
-        Player player = Bukkit.getServer().getPlayer(name);
-        if (player != null)
-            return player;
-
-        // then search offline players
         OfflinePlayer[] offlinePlayers = Bukkit.getServer().getOfflinePlayers();
         for (int i = 0; i < offlinePlayers.length; i++) {
             if (offlinePlayers[i].getName().equalsIgnoreCase(name)) {

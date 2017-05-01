@@ -1,5 +1,6 @@
 package xyz.bytemonkey.securochunk.commands;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
@@ -17,35 +18,39 @@ public class Trust implements SubCommand {
     @Override
     public boolean onCommand(Player player, String[] args) {
         PlayerData playerData = ChunkClaim.plugin.dataStore.getPlayerData(player.getName());
+        String tName = args[0];
 
         if (args.length != 1) {
             player.sendMessage(ChatColor.RED + "Usage: /chunk trust <player>");
             return true;
         }
 
-        OfflinePlayer tp = ChunkClaim.plugin.resolvePlayer(args[1]);
-        if (tp == null) {
-
-            player.sendMessage(ChatColor.RED + "Player not found.");
-            return true;
+        if(Bukkit.getPlayer(args[0]) != null) {
+            if (tName.equals(player.getName())) {
+                player.sendMessage(ChatColor.RED + "You don't trust yourself?");
+                return true;
+            }
+        } else {
+            OfflinePlayer tp = ChunkClaim.plugin.resolvePlayer(args[0]);
+            if (tp == null) {
+                player.sendMessage(ChatColor.RED + "Player not found.");
+                return true;
+            }
+            if (tName.equals(player.getName())) {
+                player.sendMessage(ChatColor.RED + "You don't trust yourself?");
+                return true;
+            }
         }
-        String tName = tp.getName();
-        if (tName.equals(player.getName())) {
-            player.sendMessage(ChatColor.RED + "You don't trust yourself?");
-            return true;
-        }
-
 
         ArrayList<Chunk> chunksInRadius = ChunkClaim.plugin.dataStore.getAllChunksForPlayer(player.getName());
 
         if (!playerData.builderNames.contains(tName)) {
 
-            for (int i = 0; i < chunksInRadius.size(); i++) {
-                if (!chunksInRadius.get(i).isTrusted(tName)) {
-                    chunksInRadius.get(i).builderNames.add(tName);
-                    ChunkClaim.plugin.dataStore.writeChunkToStorage(chunksInRadius.get(i));
+            for(Chunk chunk : chunksInRadius) {
+                if (!chunk.isTrusted(tName)) {
+                    chunk.builderNames.add(tName);
+                    ChunkClaim.plugin.dataStore.writeChunkToStorage(chunk);
                 }
-
             }
             playerData.builderNames.add(tName);
             ChunkClaim.plugin.dataStore.savePlayerData(player.getName(), playerData);

@@ -22,7 +22,7 @@ public class CommandHandler implements CommandExecutor {
     private FileConfiguration c;
     private Plugin plugin;
 
-    public CommandHandler(Plugin plugin) {
+    CommandHandler(Plugin plugin) {
         this.c = plugin.getConfig();
         this.plugin = plugin;
 
@@ -36,6 +36,11 @@ public class CommandHandler implements CommandExecutor {
         commands.put("unmark", new Unmark());
         commands.put("next", new Next());
         commands.put("view", new View());
+        commands.put("delete", new Delete());
+        commands.put("deleteall", new DeleteAll());
+        commands.put("abandon", new Abandon());
+        commands.put("trust", new Trust());
+        commands.put("untrust", new Untrust());
     }
 
     @Override

@@ -1,5 +1,6 @@
 package xyz.bytemonkey.securochunk.commands;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
@@ -13,25 +14,32 @@ import java.util.ArrayList;
  * Created by Jack on 05/01/2017.
  */
 public class Untrust implements SubCommand {
+
     @Override
     public boolean onCommand(Player player, String[] args) {
         PlayerData playerData = ChunkClaim.plugin.dataStore.getPlayerData(player.getName());
+        String tName = args[0];
 
         if(args.length!=1) {
             player.sendMessage(ChatColor.RED + "Usage: /chunk untrust <player>");
             return true;
         }
 
-        OfflinePlayer tp = ChunkClaim.plugin.resolvePlayer(args[1]);
-        if (tp == null) {
-
-            player.sendMessage(ChatColor.RED + "Player not found.");
-            return true;
-        }
-        String tName = tp.getName();
-        if(tName.equals(player.getName())) {
-            player.sendMessage(ChatColor.RED + "You don't trust yourself?");
-            return true;
+        if(Bukkit.getPlayer(args[0]) != null) {
+            if (tName.equals(player.getName())) {
+                player.sendMessage(ChatColor.RED + "You don't trust yourself?");
+                return true;
+            }
+        } else {
+            OfflinePlayer tp = ChunkClaim.plugin.resolvePlayer(args[0]);
+            if (tp == null) {
+                player.sendMessage(ChatColor.RED + "Player not found.");
+                return true;
+            }
+            if (tName.equals(player.getName())) {
+                player.sendMessage(ChatColor.RED + "You don't trust yourself?");
+                return true;
+            }
         }
 
         ArrayList<Chunk> chunksInRadius = ChunkClaim.plugin.dataStore.getAllChunksForPlayer(player.getName());
