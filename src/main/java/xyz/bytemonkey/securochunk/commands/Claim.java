@@ -18,8 +18,6 @@ public class Claim implements SubCommand {
 
     @Override
     public boolean onCommand(Player player, String[] args) {
-        if (args.length == 1) {
-
             Location location = player.getLocation();
             if (!ChunkClaim.plugin.config_worlds.contains(location.getWorld().getName())) return true;
 
@@ -33,7 +31,7 @@ public class Claim implements SubCommand {
                     player.sendMessage(ChatColor.RED + "You don't have permissions for claiming chunks.");
                     return true;
                 }
-                if (playerData.getCredits() > 0) {
+                if (ChunkClaim.getEcon().getBalance(player) >= ChunkClaim.plugin.getConfig().getInt("costPerChunk")) {
 
                     if (!player.hasPermission("chunkclaim.admin")) {
                         ArrayList<Chunk> playerChunks = ChunkClaim.plugin.dataStore.getAllChunksForPlayer(playerName);
@@ -48,11 +46,11 @@ public class Claim implements SubCommand {
 
                     ChunkClaim.plugin.dataStore.addChunk(newChunk);
 
-                    playerData.credits--;
+                    ChunkClaim.getEcon().withdrawPlayer(player, ChunkClaim.plugin.getConfig().getInt("costPerChunk"));
                     playerData.lastChunk = newChunk;
                     ChunkClaim.plugin.dataStore.savePlayerData(playerName, playerData);
 
-                    player.sendMessage("You claimed this chunk. Credits left: " + playerData.getCredits());
+                    player.sendMessage(ChatColor.RED + "You claimed this chunk.");
 
                     Visualization visualization = Visualization.FromChunk(newChunk, location.getBlockY(), VisualizationType.Chunk, location);
                     Visualization.Apply(player, visualization);
@@ -65,16 +63,10 @@ public class Claim implements SubCommand {
                         Visualization.Apply(player, visualization);
                     }
                 }
-                return true;
-            } else {
-                player.sendMessage("This chunk is not public.");
-            }
-        } else {
-            player.sendMessage(ChatColor.RED + "Usage: /chunk claim");
-            return true;
-        }
+            } else
+                player.sendMessage(ChatColor.RED + "This chunk is not public.");
 
-        return false;
+        return true;
     }
 
     @Override

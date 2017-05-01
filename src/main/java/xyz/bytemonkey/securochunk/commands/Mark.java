@@ -11,28 +11,27 @@ import xyz.bytemonkey.securochunk.utils.Chunk;
  * Created by Jack on 05/01/2017.
  */
 public class Mark implements SubCommand {
+
     @Override
     public boolean onCommand(Player player, String[] args) {
         if(player.hasPermission("chunkclaim.admin")) {
-                Location location = player.getLocation();
+            Location location = player.getLocation();
 
-                if(!ChunkClaim.plugin.config_worlds.contains(location.getWorld().getName())) return true;
+            if (!ChunkClaim.plugin.config_worlds.contains(location.getWorld().getName())) return true;
 
-                PlayerData playerData = ChunkClaim.plugin.dataStore.getPlayerData(player.getName());
-                Chunk chunk = ChunkClaim.plugin.dataStore.getChunkAt(location, playerData.lastChunk);
+            PlayerData playerData = ChunkClaim.plugin.dataStore.getPlayerData(player.getName());
+            Chunk chunk = ChunkClaim.plugin.dataStore.getChunkAt(location, playerData.lastChunk);
 
-                if(chunk != null)
-                {
-                    String playerName = player.getName();
-                    ChunkClaim.addLogEntry("Chunk at " + chunk.x + "|" + chunk.z + " has been marked for deletion by " + playerName);
-                    chunk.mark();
-                    chunk.marked = true;
-                    player.sendMessage(ChatColor.RED + "Marked chunk for deletion.");
+            if (chunk != null) {
+                String playerName = player.getName();
+                ChunkClaim.addLogEntry("Chunk at " + chunk.x + "|" + chunk.z + " has been marked for deletion by " + playerName);
+                chunk.mark();
+                chunk.marked = true;
+                player.sendMessage(ChatColor.RED + "Marked chunk for deletion.");
 
-                } else
-                    player.sendMessage(ChatColor.RED + "This chunk is public.");
-                return true;
-        } else
+            } else
+                player.sendMessage(ChatColor.RED + "This chunk is public.");
+        }
             return true;
     }
 

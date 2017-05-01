@@ -26,6 +26,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
 
+import lombok.Getter;
+import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -34,6 +36,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
+import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 import xyz.bytemonkey.securochunk.events.BlockEventHandler;
 import xyz.bytemonkey.securochunk.events.EntityEventHandler;
@@ -73,6 +76,8 @@ public class ChunkClaim extends JavaPlugin {
 	public float config_autoDeleteDays;
 	public boolean config_nextToForce;
 	private boolean config_regenerateChunk;
+
+	@Getter private static Economy econ = null;
 
 	public void onDisable() {
 		for (int i = 0; i < getServer().getOnlinePlayers().size(); i++) {
@@ -142,6 +147,12 @@ public class ChunkClaim extends JavaPlugin {
 					.scheduleSyncRepeatingTask(this, task, 20L * 60 * 60,
 							20L * 60 * 60);
 		}
+
+		if (!setupEconomy() ) {
+			getLogger().severe(String.format("[%s] - Disabled due to no Vault dependency found!", getDescription().getName()));
+			getServer().getPluginManager().disablePlugin(this);
+		}
+		getCommand("chunk").setExecutor(new CommandHandler(this));
 	}
 
 	public ArrayList<Chunk> getChunksInRadius(Chunk chunk, String playerName, int radius) {
@@ -173,8 +184,6 @@ public class ChunkClaim extends JavaPlugin {
 
 	}
 
-
-
 	public static void addLogEntry(String entry) {
 		logger.info("ChunkClaim: " + entry);
 	}
@@ -188,5 +197,17 @@ public class ChunkClaim extends JavaPlugin {
 			Player player = (Player) getServer().getOnlinePlayers().toArray()[i];
 			player.sendMessage(message);
 		}
+	}
+
+	private boolean setupEconomy() {
+		if (getServer().getPluginManager().getPlugin("Vault") == null) {
+			return false;
+		}
+		RegisteredServiceProvider<Economy> rsp = getServer().getServicesManager().getRegistration(Economy.class);
+		if (rsp == null) {
+			return false;
+		}
+		econ = rsp.getProvider();
+		return econ != null;
 	}
 }

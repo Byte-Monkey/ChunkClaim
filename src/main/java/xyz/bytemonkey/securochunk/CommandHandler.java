@@ -9,7 +9,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
-import xyz.bytemonkey.securochunk.commands.SubCommand;
+import xyz.bytemonkey.securochunk.commands.*;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -25,14 +25,24 @@ public class CommandHandler implements CommandExecutor {
     public CommandHandler(Plugin plugin) {
         this.c = plugin.getConfig();
         this.plugin = plugin;
-//        commands.put("setlobbyspawn", new SetLobbySpawn());
+
+        loadCommands();
+    }
+
+    private void loadCommands() {
+        commands.put("claim", new Claim());
+        commands.put("list", new List());
+        commands.put("mark", new Mark());
+        commands.put("unmark", new Unmark());
+        commands.put("next", new Next());
+//        commands.put("view", new View());
     }
 
     @Override
     public boolean onCommand(CommandSender sender, Command cmd1, String commandLabel, String[] args) {
         PluginDescriptionFile pdfFile = plugin.getDescription();
         if (!(sender instanceof Player)) {
-            Bukkit.getLogger().log(Level.INFO, "Only in-game players can use SurvivalGames commands! ");
+            Bukkit.getLogger().log(Level.INFO, "Only in-game players can use Chunk Claim commands! ");
             return true;
         }
 
@@ -73,7 +83,7 @@ public class CommandHandler implements CommandExecutor {
         return false;
     }
 
-    public void help(Player p) {
+    private void help(Player p) {
         p.sendMessage(ChatColor.BLUE + "------------ " + ChatColor.DARK_AQUA + " Chunk Claim Commands" + ChatColor.BLUE + " ------------");
         for (String command : commands.keySet()) {
             try {

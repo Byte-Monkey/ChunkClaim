@@ -13,5 +13,6 @@ minModBlocks: 10
 autoDeleteDays: 2
 nextToForce: false
 regenerateChunk: true
-  
+
+costPerChunk: 1000
   

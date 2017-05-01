@@ -18,7 +18,7 @@ public class List implements SubCommand {
     public boolean onCommand(Player player, String[] args) {
         if (player.hasPermission("chunkclaim.admin")) {
 
-            if (args.length != 2) {
+            if (args.length != 1) {
                 player.sendMessage(ChatColor.RED + "Usage: /chunk list <player>");
                 return true;
             }
@@ -43,10 +43,9 @@ public class List implements SubCommand {
                 adminstring += ", Permanent: " + (chunk.modifiedBlocks < 0 ? "true" : ("false (" + chunk.modifiedBlocks + ")"));
                 player.sendMessage(ChatColor.GREEN + adminstring);
             }
-            return true;
         }
 
-        return false;
+        return true;
     }
 
     @Override
