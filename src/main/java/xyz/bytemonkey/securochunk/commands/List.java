@@ -23,7 +23,7 @@ public class List implements SubCommand {
                 return true;
             }
 
-            OfflinePlayer tp = resolvePlayer(args[1]);
+            OfflinePlayer tp = ChunkClaim.plugin.resolvePlayer(args[1]);
             if (tp == null) {
                 player.sendMessage(ChatColor.RED + "Player not found.");
                 return true;
@@ -58,19 +58,4 @@ public class List implements SubCommand {
         return ChatColor.GREEN + "/chunk list <player> - List chunks owned by a player";
     }
 
-    private OfflinePlayer resolvePlayer(String name) {
-
-        Player player = Bukkit.getServer().getPlayer(name);
-        if (player != null)
-            return player;
-
-        // then search offline players
-        OfflinePlayer[] offlinePlayers = Bukkit.getServer().getOfflinePlayers();
-        for (int i = 0; i < offlinePlayers.length; i++) {
-            if (offlinePlayers[i].getName().equalsIgnoreCase(name)) {
-                return offlinePlayers[i];
-            }
-        }
-        return null;
-    }
 }

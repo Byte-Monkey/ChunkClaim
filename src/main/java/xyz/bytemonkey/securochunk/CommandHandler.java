@@ -35,7 +35,7 @@ public class CommandHandler implements CommandExecutor {
         commands.put("mark", new Mark());
         commands.put("unmark", new Unmark());
         commands.put("next", new Next());
-//        commands.put("view", new View());
+        commands.put("view", new View());
     }
 
     @Override

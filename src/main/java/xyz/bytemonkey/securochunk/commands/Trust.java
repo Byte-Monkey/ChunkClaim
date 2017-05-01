@@ -1,6 +1,9 @@
 package xyz.bytemonkey.securochunk.commands;
 
+import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.entity.Player;
+import xyz.bytemonkey.securochunk.ChunkClaim;
 import xyz.bytemonkey.securochunk.PlayerData;
 import xyz.bytemonkey.securochunk.utils.Chunk;
 
@@ -9,51 +12,57 @@ import java.util.ArrayList;
 /**
  * Created by Jack on 05/01/2017.
  */
-public class Trust {
+public class Trust implements SubCommand {
 
-//    else if (args[0].equalsIgnoreCase("trust")) {
-//
-//        PlayerData playerData = this.dataStore.getPlayerData(player.getName());
-//
-//        if(args.length!=2) {
-//            sendMsg(player,"Usage: /chunk trust <player>");
-//            return true;
-//
-//        }
-//
-//        OfflinePlayer tp = resolvePlayer(args[1]);
-//        if (tp == null) {
-//
-//            sendMsg(player,"Player not found.");
-//            return true;
-//        }
-//        String tName = tp.getName();
-//        if(tName.equals(player.getName())) {
-//            sendMsg(player,"You don't trust yourself?");
-//            return true;
-//        }
-//
-//
-//        ArrayList<Chunk> chunksInRadius = this.dataStore.getAllChunksForPlayer(player.getName());
-//
-//        if(!playerData.builderNames.contains(tName)) {
-//
-//            for(int i=0; i<chunksInRadius.size();i++) {
-//                if(!chunksInRadius.get(i).isTrusted(tName)) {
-//                    chunksInRadius.get(i).builderNames.add(tName);
-//                    dataStore.writeChunkToStorage(chunksInRadius.get(i));
-//                }
-//
-//            }
-//            playerData.builderNames.add(tName);
-//            this.dataStore.savePlayerData(player.getName(), playerData);
-//
-//        }
-//        sendMsg(player,"Trusted " + tName+ " in all your chunks.");
-//        return true;
-//
-//
-//
-//    }
+    @Override
+    public boolean onCommand(Player player, String[] args) {
+        PlayerData playerData = ChunkClaim.plugin.dataStore.getPlayerData(player.getName());
+
+        if (args.length != 1) {
+            player.sendMessage(ChatColor.RED + "Usage: /chunk trust <player>");
+            return true;
+        }
+
+        OfflinePlayer tp = ChunkClaim.plugin.resolvePlayer(args[1]);
+        if (tp == null) {
+
+            player.sendMessage(ChatColor.RED + "Player not found.");
+            return true;
+        }
+        String tName = tp.getName();
+        if (tName.equals(player.getName())) {
+            player.sendMessage(ChatColor.RED + "You don't trust yourself?");
+            return true;
+        }
+
+
+        ArrayList<Chunk> chunksInRadius = ChunkClaim.plugin.dataStore.getAllChunksForPlayer(player.getName());
+
+        if (!playerData.builderNames.contains(tName)) {
+
+            for (int i = 0; i < chunksInRadius.size(); i++) {
+                if (!chunksInRadius.get(i).isTrusted(tName)) {
+                    chunksInRadius.get(i).builderNames.add(tName);
+                    ChunkClaim.plugin.dataStore.writeChunkToStorage(chunksInRadius.get(i));
+                }
+
+            }
+            playerData.builderNames.add(tName);
+            ChunkClaim.plugin.dataStore.savePlayerData(player.getName(), playerData);
+
+        }
+        player.sendMessage(ChatColor.GREEN + "Trusted " + tName + " in all your chunks.");
+        return true;
+    }
+
+    @Override
+    public String permission() {
+        return "chunkclaim.claim";
+    }
+
+    @Override
+    public String help(Player p) {
+        return ChatColor.GREEN + "/chunk trust - Trust a player in all chunks you own.";
+    }
 
 }

@@ -1,7 +1,11 @@
 package xyz.bytemonkey.securochunk.commands;
 
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.entity.Player;
+import xyz.bytemonkey.securochunk.ChunkClaim;
 import xyz.bytemonkey.securochunk.PlayerData;
 import xyz.bytemonkey.securochunk.utils.Chunk;
 import xyz.bytemonkey.securochunk.visual.Visualization;
@@ -12,104 +16,91 @@ import java.util.ArrayList;
 /**
  * Created by Jack on 05/01/2017.
  */
-public class Delete {
+public class Delete implements SubCommand {
+    @Override
+    public boolean onCommand(Player player, String[] args) {
+        if (!player.hasPermission("chunkclaim.admin")) {
+            player.sendMessage(ChatColor.RED + "No permission.");
+            return true;
+        }
+        Location location = player.getLocation();
 
-//    else if (args[0].equalsIgnoreCase("delete")) {
-//
-//        if(!player.hasPermission("chunkclaim.admin")) {
-//            sendMsg(player,"No permission.");
-//            return true;
-//        }
-//
-//
-//        Location location = player.getLocation();
-//
-//        if(args.length==3) {
-//
-//            int radius;
-//            int abd = 0;
-//
-//            try {
-//
-//                radius = Integer.parseInt(args[2]);
-//
-//                if(radius<0) {
-//
-//                    sendMsg(player,"Error: Negative Radius");
-//                    return true;
-//                }
-//
-//                if(radius>10) {
-//                    sendMsg(player,"Error: Max Radius is 10.");
-//                    return true;
-//                }
-//                OfflinePlayer tp = resolvePlayer(args[1]);
-//                if (tp == null) {
-//
-//                    sendMsg(player,"Player not found.");
-//                    return true;
-//                }
-//                String tName = tp.getName();
-//                PlayerData playerData = this.dataStore.getPlayerData(tName);
-//
-//                org.bukkit.Chunk bukkitChunk = location.getChunk();
-//                Chunk chunk = new Chunk(bukkitChunk.getX(),bukkitChunk.getZ(),bukkitChunk.getWorld().getName());
-//                ArrayList<Chunk> chunksInRadius = this.getChunksInRadius(chunk, tName,radius);
-//
-//
-//                for(int i=0; i<chunksInRadius.size();i++) {
-//
-//                    this.dataStore.deleteChunk(chunksInRadius.get(i));
-//                    playerData.credits++;
-//                    abd++;
-//
-//
-//                }
-//
-//                this.dataStore.savePlayerData(tName, playerData);
-//
-//                sendMsg(player,abd + " Chunks deleted in radius "+radius+".");
-//
-//                return true;
-//
-//            } catch(Exception e) {
-//
-//                sendMsg(player,"Usage: /chunk delete [<player> <radius>]");
-//                return true;
-//            }
-//
-//        }
-//        else if(args.length==1) {
-//            Chunk chunk = this.dataStore.getChunkAt(player.getLocation(), null);
-//
-//
-//            if (chunk == null) {
-//
-//                sendMsg(player,"This chunk is public.");
-//                Visualization visualization = Visualization.FromBukkitChunk(location.getChunk(), location.getBlockY(), VisualizationType.Public, location);
-//                Visualization.Apply(player, visualization);
-//            }
-//
-//            else {
-//                PlayerData playerData = this.dataStore.getPlayerData(chunk.ownerName);
-//                this.dataStore.deleteChunk(chunk);
-//                playerData.credits++;
-//                this.dataStore.savePlayerData(chunk.ownerName, playerData);
-//                sendMsg(player,"Chunk deleted.");
-//
-//                Visualization visualization = Visualization.FromChunk(chunk, location.getBlockY(),VisualizationType.Public, location);
-//                Visualization.Apply(player, visualization);
-//
-//                return true;
-//            }
-//
-//        }
-//
-//        else {
-//            sendMsg(player,"Usage: /chunk delete [<player> <radius>]");
-//            return true;
-//        }
-//
-//    }
+        if (args.length == 2) {
+            int radius;
+            int abd = 0;
 
+            try {
+                radius = Integer.parseInt(args[2]);
+                if (radius < 0) {
+                    player.sendMessage(ChatColor.RED + "Error: Negative Radius");
+                    return true;
+                }
+
+                if (radius > 10) {
+                    player.sendMessage(ChatColor.RED + "Error: Max Radius is 10.");
+                    return true;
+                }
+                OfflinePlayer tp = ChunkClaim.plugin.resolvePlayer(args[1]);
+                if (tp == null) {
+                    player.sendMessage(ChatColor.RED + "Player not found.");
+                    return true;
+                }
+                String tName = tp.getName();
+                PlayerData playerData = ChunkClaim.plugin.dataStore.getPlayerData(tName);
+
+                org.bukkit.Chunk bukkitChunk = location.getChunk();
+                Chunk chunk = new Chunk(bukkitChunk.getX(), bukkitChunk.getZ(), bukkitChunk.getWorld().getName());
+                ArrayList<Chunk> chunksInRadius = ChunkClaim.plugin.getChunksInRadius(chunk, tName, radius);
+
+                for(Chunk chunk1 : chunksInRadius) {
+                    ChunkClaim.plugin.dataStore.deleteChunk(chunk1);
+
+                    ChunkClaim.getEcon().depositPlayer(Bukkit.getOfflinePlayer(ChunkClaim.plugin.dataStore.getPlayerData(chunk.ownerName).playerName),
+                            ChunkClaim.plugin.getConfig().getInt("costPerChunk"));
+                    abd++;
+                }
+                ChunkClaim.plugin.dataStore.savePlayerData(tName, playerData);
+                player.sendMessage(ChatColor.RED + "" + abd + " Chunks deleted in radius " + radius + ".");
+
+                return true;
+            } catch (Exception e) {
+                player.sendMessage(ChatColor.RED + "Usage: /chunk delete [<player> <radius>]");
+                return true;
+            }
+
+        }
+
+        Chunk chunk = ChunkClaim.plugin.dataStore.getChunkAt(player.getLocation(), null);
+        if (chunk == null) {
+            player.sendMessage(ChatColor.RED + "This chunk is public.");
+            Visualization visualization = Visualization.FromBukkitChunk(location.getChunk(), location.getBlockY(), VisualizationType.Public, location);
+            Visualization.Apply(player, visualization);
+        } else {
+            PlayerData playerData = ChunkClaim.plugin.dataStore.getPlayerData(chunk.ownerName);
+            ChunkClaim.plugin.dataStore.deleteChunk(chunk);
+
+            //I know a lot of this is a mess but I'll clean it up later
+
+            ChunkClaim.getEcon().depositPlayer(Bukkit.getOfflinePlayer(ChunkClaim.plugin.dataStore.getPlayerData(chunk.ownerName).playerName),
+                    ChunkClaim.plugin.getConfig().getInt("costPerChunk"));
+
+            ChunkClaim.plugin.dataStore.savePlayerData(chunk.ownerName, playerData);
+            player.sendMessage(ChatColor.RED + "Chunk deleted.");
+
+            Visualization visualization = Visualization.FromChunk(chunk, location.getBlockY(), VisualizationType.Public, location);
+            Visualization.Apply(player, visualization);
+        }
+
+        return true;
+    }
+
+    @Override
+    public String permission() {
+        return "chunkclaim.claim";
+    }
+
+    @Override
+    public String help(Player p) {
+        return ChatColor.GREEN + "/chunk delete - Delete the chunk you are in";
+    }
 }
