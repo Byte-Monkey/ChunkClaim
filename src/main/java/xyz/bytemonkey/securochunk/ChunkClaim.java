@@ -21,8 +21,6 @@
 package xyz.bytemonkey.securochunk;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -30,10 +28,7 @@ import lombok.Getter;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.RegisteredServiceProvider;
@@ -44,8 +39,6 @@ import xyz.bytemonkey.securochunk.events.PlayerEventHandler;
 import xyz.bytemonkey.securochunk.events.WorldEventHandler;
 import xyz.bytemonkey.securochunk.utils.Chunk;
 import xyz.bytemonkey.securochunk.utils.DataStore;
-import xyz.bytemonkey.securochunk.visual.Visualization;
-import xyz.bytemonkey.securochunk.visual.VisualizationType;
 
 public class ChunkClaim extends JavaPlugin {
 	public static ChunkClaim plugin;
@@ -153,6 +146,8 @@ public class ChunkClaim extends JavaPlugin {
 			getServer().getPluginManager().disablePlugin(this);
 		}
 		getCommand("chunk").setExecutor(new CommandHandler(this));
+
+        new Metrics(this);
 	}
 
 	public ArrayList<Chunk> getChunksInRadius(Chunk chunk, String playerName, int radius) {

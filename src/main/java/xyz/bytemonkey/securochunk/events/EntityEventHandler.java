@@ -143,70 +143,7 @@ public class EntityEventHandler implements Listener {
 		event.setDroppedExp(0);
 		event.getDrops().clear();
 	}
-	/*
-	//when an entity picks up an item
-	@EventHandler(priority = EventPriority.LOWEST)
-	public void onEntityPickup(EntityChangeBlockEvent event) {
-		if(!ChunkClaim.plugin.config_worlds.contains(event.getEntity().getWorld().getName())) return;		
-		if(event.getEntity() instanceof Enderman) {
-			event.setCancelled(true);
-		}
-	}
-	*/
-	
-	//when a painting is broken
-//	@EventHandler(ignoreCancelled = true, priority = EventPriority.LOWEST)
-//	public void onPaintingBreak(PaintingBreakEvent event) {
-//
-//		if(!ChunkClaim.plugin.config_worlds.contains(event.getPainting().getWorld().getName())) return;
-//
-//		if(!(event instanceof PaintingBreakByEntityEvent))   {
-//	         event.setCancelled(true);
-//	         return;
-//	     }
-//
-//		PaintingBreakByEntityEvent entityEvent = (PaintingBreakByEntityEvent)event;
-//
-//		//who is removing it?
-//		Entity remover = entityEvent.getRemover();
-//
-//		//again, making sure the breaker is a player
-//		if(!(remover instanceof Player)) {
-//			event.setCancelled(true);
-//			return;
-//        }
-//
-//		Chunk chunk = this.dataStore.getChunkAt(event.getPainting().getLocation(), null);
-//
-//		if(chunk==null) {
-//			event.setCancelled(true);
-//			return;
-//		}
-//		if(!chunk.isTrusted(((Player) remover).getName())) {
-//			event.setCancelled(true);
-//			ChunkClaim.plugin.sendMsg(((Player) remover),"You don't have " + chunk.ownerName + "'s permission to build here.");
-//			return;
-//		}
-//	}
-//	//when a painting is placed
-//	@EventHandler(ignoreCancelled = true, priority = EventPriority.LOWEST)
-//	public void onPaintingPlace(PaintingPlaceEvent event) {
-//
-//		if(!ChunkClaim.plugin.config_worlds.contains(event.getPlayer().getWorld().getName())) return;
-//
-//		Player player = event.getPlayer();
-//		Chunk chunk = this.dataStore.getChunkAt(event.getPainting().getLocation(), null);
-//
-//		if(chunk==null) {
-//			event.setCancelled(true);
-//			return;
-//		}
-//		if(!chunk.isTrusted(player.getName())) {
-//			event.setCancelled(true);
-//			ChunkClaim.plugin.sendMsg(player,"You don't have " + chunk.ownerName + "'s permission to build here.");
-//			return;
-//		}
-//	}
+
 	//when an entity is damaged
 	@EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
 	public void onEntityDamage (EntityDamageEvent event) {
@@ -262,8 +199,8 @@ public class EntityEventHandler implements Listener {
 						//cache claim for later
 						if(playerData != null) {
 							playerData.lastChunk = chunk;
-						}	
-						
+						}
+
 					}
 				}
 				

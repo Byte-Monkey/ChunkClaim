@@ -1,5 +1,6 @@
 package xyz.bytemonkey.securochunk.commands;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -10,11 +11,16 @@ import xyz.bytemonkey.securochunk.visual.Visualization;
 import xyz.bytemonkey.securochunk.visual.VisualizationType;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by Jack on 05/01/2017.
  */
 public class Next implements SubCommand {
+
+    private Map<String, Integer> playerNextInfo = new HashMap<>();
+
     @Override
     public boolean onCommand(Player player, String[] args) {
         if (player.hasPermission("chunkclaim.admin")) {
@@ -35,21 +41,33 @@ public class Next implements SubCommand {
             //int r = (int)(Math.random()*dataStore.chunks.size());
             int r = ChunkClaim.plugin.dataStore.nextChunkId;
 
-            for (int i = 0; i < ChunkClaim.plugin.dataStore.chunks.size(); i++) {
+            int j;
 
-                int j = (r + i) % ChunkClaim.plugin.dataStore.chunks.size();
+            if (playerNextInfo.containsKey(player.getName())) {
+                j = playerNextInfo.get(player.getName());
+                playerNextInfo.put(player.getName(), j++);
+            } else {
+                j = 0;
+                playerNextInfo.put(player.getName(), 1);
+            }
 
+            int size = ChunkClaim.plugin.dataStore.chunks.size();
+            if(j >= size) {
+                playerNextInfo.remove(player.getName());
+                return true;
+            }
+
+            for (int i = 0; i < size; i++) {
                 chunk = ChunkClaim.plugin.dataStore.chunks.get(j);
                 worldName = chunk.worldName;
                 inspected = chunk.inspected;
                 marked = chunk.marked;
                 permanent = chunk.modifiedBlocks == -1;
-
                 if (worldName.equals(player.getWorld().getName()) && !inspected && !marked && permanent) {
                     break;
                 }
             }
-            if (chunk == null || !(worldName.equals(player.getWorld().getName()) && !inspected && !marked && permanent)) {
+            if (chunk == null) {
                 player.sendMessage(ChatColor.RED + "No chunk found.");
                 return true;
             }
