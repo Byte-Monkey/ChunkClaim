@@ -288,8 +288,8 @@ public class FlatFileDataStore extends DataStore {
                     playerData.lastLogin = null;
                 }
                 //third line is credits
-                String creditsString = inStream.readLine();
-                playerData.credits = Float.parseFloat(creditsString);
+//                String creditsString = inStream.readLine();
+//                playerData.credits = Float.parseFloat(creditsString);
 
                 //fourth line is any bonus credits granted by administrators
                 String bonusString = inStream.readLine();
@@ -298,9 +298,9 @@ public class FlatFileDataStore extends DataStore {
                 //5. line: list of builders
                 String[] b = inStream.readLine().split(";");
 
-                for (int i = 0; i < b.length; i++) {
-                    if (!b[i].equals(""))
-                        playerData.builderNames.add(b[i]);
+                for (String string : b) {
+                    if (!string.equals(""))
+                        playerData.builderNames.add(string);
                 }
 
                 inStream.close();
@@ -342,8 +342,8 @@ public class FlatFileDataStore extends DataStore {
             outStream.newLine();
 
             //third line is credits
-            outStream.write(String.valueOf(playerData.credits));
-            outStream.newLine();
+//            outStream.write(String.valueOf(playerData.credits));
+//            outStream.newLine();
 
             //fourth line is bonus
             outStream.write(String.valueOf(playerData.bonus));

@@ -60,39 +60,6 @@ public abstract class DataStore {
 
     abstract public void loadWorldData(String worldName) throws Exception;
 
-
-    public void cleanUp(int n) {
-
-        if (this.chunks.size() < 1) return;
-
-        Date now = new Date();
-        double deletionTime = (1000 * 60 * 60 * 24) * ChunkClaim.plugin.config_autoDeleteDays;
-        int r = 0;
-        for (int i = 0; i < n; i++) {
-            nextChunkId++;
-
-            if (nextChunkId >= this.chunks.size()) nextChunkId = 0;
-
-            Chunk chunk = chunks.get(nextChunkId);
-            if (chunk.modifiedBlocks >= 0) {
-                long diff = now.getTime() - chunk.claimDate.getTime();
-                double chunkDeletionTime = deletionTime;
-                if (diff > chunkDeletionTime) {
-                    PlayerData playerData = this.getPlayerData(chunk.ownerName);
-                    playerData.credits++;
-                    this.savePlayerData(chunk.ownerName, playerData);
-                    this.playerNameToPlayerDataMap.remove(chunk.ownerName);
-                    ChunkClaim.addLogEntry("Auto-deleted chunk by " + chunk.ownerName + " at " + (chunk.x * 16) + " | " + (chunk.z * 16));
-                    this.deleteChunk(chunk);
-                    r++;
-                }
-                ;
-            }
-            if (r > 50) break;
-        }
-
-    }
-
     synchronized public void unloadWorldData(String worldName) {
         this.worlds.remove(worldName);
         for (int i = 0; i < this.chunks.size(); i++) {
@@ -101,7 +68,6 @@ public abstract class DataStore {
             }
         }
     }
-
 
     public void clearCachedPlayerData(String playerName) {
         this.playerNameToPlayerDataMap.remove(playerName);
@@ -116,11 +82,11 @@ public abstract class DataStore {
         this.saveChunk(chunk);
 
         //modify previous owner data
-        ownerData.credits--;
+//        ownerData.credits--;
         this.savePlayerData(chunk.ownerName, ownerData);
 
         //modify new owner data
-        newOwnerData.credits++;
+//        newOwnerData.credits++;
         this.savePlayerData(newOwnerName, newOwnerData);
 
     }
@@ -169,7 +135,7 @@ public abstract class DataStore {
         }
         this.deleteChunkFromSecondaryStorage(chunk);
 
-//		ChunkClaim.plugin.regenerateChunk(chunk);
+		ChunkClaim.plugin.regenerateChunk(chunk);
     }
 
     abstract public void deleteChunkFromSecondaryStorage(Chunk chunk);
@@ -208,11 +174,9 @@ public abstract class DataStore {
 
     synchronized public int deleteChunksForPlayer(String playerName) {
         ArrayList<Chunk> playerChunks = getAllChunksForPlayer(playerName);
-        PlayerData playerData = this.getPlayerData(playerName);
-        for (int i = 0; i < playerChunks.size(); i++) {
-            Chunk chunk = playerChunks.get(i);
-            this.deleteChunk(chunk);
-            playerData.credits++;
+        for (Chunk c : playerChunks) {
+            this.deleteChunk(c);
+            ChunkClaim.getEcon().depositPlayer(playerName, ChunkClaim.plugin.config_chunkCost);
         }
         return playerChunks.size();
     }

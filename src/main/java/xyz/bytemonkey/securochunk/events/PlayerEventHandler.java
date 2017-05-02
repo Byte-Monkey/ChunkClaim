@@ -240,7 +240,6 @@ public class PlayerEventHandler implements Listener {
         //NOTE: that this event applies only to players. monsters and animals can still trample.
         else if (event.getAction() == Action.PHYSICAL && clickedBlockType == Material.SOIL) {
             event.setCancelled(true);
-            return;
         }
 
         //apply rule for note blocks and repeaters
@@ -251,7 +250,6 @@ public class PlayerEventHandler implements Listener {
                 if (!chunk.isTrusted(player.getName())) {
                     event.setCancelled(true);
                     ChunkClaim.plugin.sendMsg(player, "Not permitted.");
-                    return;
                 }
             }
         }
@@ -272,15 +270,13 @@ public class PlayerEventHandler implements Listener {
                     if (!chunk.isTrusted(player.getName())) {
                         event.setCancelled(true);
                         ChunkClaim.plugin.sendMsg(player, "Not permitted.");
-                        return;
                     }
                 } else {
                     event.setCancelled(true);
                     ChunkClaim.plugin.sendMsg(player, "Not permitted.");
-                    return;
                 }
             } else if (materialInHand == Material.MONSTER_EGG) {
-                if (ChunkClaim.plugin.config_mobsForCredits && (player.getItemInHand().getDurability() == EntityType.WOLF.getTypeId() || player.getItemInHand().getDurability() == EntityType.OCELOT.getTypeId())) {
+                if ((player.getItemInHand().getDurability() == EntityType.WOLF.getTypeId() || player.getItemInHand().getDurability() == EntityType.OCELOT.getTypeId())) {
 
                     Chunk chunk = this.dataStore.getChunkAt(clickedBlock.getLocation(), playerData.lastChunk);
                     if (chunk != null) {
@@ -288,34 +284,14 @@ public class PlayerEventHandler implements Listener {
                         if (!chunk.isTrusted(player.getName())) {
                             event.setCancelled(true);
                             ChunkClaim.plugin.sendMsg(player, "Not permitted.");
-                            return;
-                        } else {
-                            if (playerData.getCredits() >= ChunkClaim.plugin.config_mobPrice) {
-                                playerData.credits -= 30;
-                                ChunkClaim.plugin.sendMsg(player, "You spawned this mob for " + ChunkClaim.plugin.config_mobPrice + " credits. Credits left: " + playerData.getCredits());
-                                return;
-
-                            } else {
-                                event.setCancelled(true);
-                                ChunkClaim.plugin.sendMsg(player, "Not enough credits to spawn a mob (" + ChunkClaim.plugin.config_mobPrice + ").");
-                                return;
-                            }
                         }
                     } else {
                         event.setCancelled(true);
                         ChunkClaim.plugin.sendMsg(player, "Not permitted.");
-                        return;
                     }
-                } else {
+                } else
                     event.setCancelled(true);
-                    return;
-                }
-
             }
-
         }
-
-
     }
-
 }

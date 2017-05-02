@@ -83,26 +83,6 @@ public class EntityEventHandler implements Listener {
         }
     }
 
-    //when an item spawns...
-    @EventHandler(priority = EventPriority.LOWEST)
-    public void onItemSpawn(ItemSpawnEvent event) {
-
-        if (!ChunkClaim.plugin.config_worlds.contains(event.getEntity().getWorld().getName())) return;
-
-        Entity entity = event.getEntity();
-        Item item = (Item) entity;
-        Material material = item.getItemStack().getType();
-
-
-        //allow dropping books. levers for chairs plugin
-        if (material == Material.WRITTEN_BOOK || material == Material.BOOK_AND_QUILL || material == Material.LEVER) {
-            return;
-        } else {
-            //ChunkClaim.addLogEntry("Item spawn cancelled.");
-            event.setCancelled(true);
-        }
-    }
-
     //when an experience bottle explodes...
     @EventHandler(priority = EventPriority.LOWEST)
     public void onExpBottle(ExpBottleEvent event) {

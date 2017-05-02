@@ -51,8 +51,9 @@ public class ChunkClaim extends JavaPlugin {
     public boolean config_protectSwitches;
     public int config_mobPrice;
     public int config_minModBlocks;
-//    private boolean config_regenerateChunk;
+    private boolean config_regenerateChunk;
     public float config_autoDeleteDays;
+    public int config_chunkCost;
 
     public static void addLogEntry(String entry) {
         logger.info("ChunkClaim: " + entry);
@@ -82,7 +83,8 @@ public class ChunkClaim extends JavaPlugin {
         this.config_mobPrice = this.getConfig().getInt("mobPrice");
         this.config_minModBlocks = this.getConfig().getInt("minModBlocks");
         this.config_autoDeleteDays = (float) this.getConfig().getDouble("autoDeleteDays");
-//		this.config_regenerateChunk = this.getConfig().getBoolean("regenerateChunk");
+		this.config_regenerateChunk = this.getConfig().getBoolean("regenerateChunk");
+		this.config_chunkCost = this.getConfig().getInt("costPerChunk");
 
         try {
             this.dataStore = new FlatFileDataStore();
@@ -107,13 +109,13 @@ public class ChunkClaim extends JavaPlugin {
         new Metrics(this);
     }
 
-//	public void regenerateChunk(Chunk chunk) {
-//		if(config_regenerateChunk) {
-//			getServer().getWorld(chunk.worldName).regenerateChunk(chunk.x, chunk.z);
-//			getServer().getWorld(chunk.worldName).unloadChunkRequest(chunk.x, chunk.z);
-//		}
-//
-//	}
+	public void regenerateChunk(Chunk chunk) {
+		if(config_regenerateChunk) {
+			getServer().getWorld(chunk.worldName).regenerateChunk(chunk.x, chunk.z);
+			getServer().getWorld(chunk.worldName).unloadChunkRequest(chunk.x, chunk.z);
+		}
+
+	}
 
     public ArrayList<Chunk> getChunksInRadius(Chunk chunk, String playerName, int radius) {
         ArrayList<Chunk> chunksInRadius = new ArrayList<Chunk>();

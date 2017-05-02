@@ -8,6 +8,6 @@ mobPrice: 30
 minModBlocks: 1d0
 autoDeleteDays: 2
 nextToForce: false
-regenerateChunk: true
+regenerateChunk: false
 costPerChunk: 1000
   

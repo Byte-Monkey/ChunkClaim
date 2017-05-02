@@ -20,7 +20,6 @@
 
 package xyz.bytemonkey.securochunk;
 
-import org.bukkit.Location;
 import xyz.bytemonkey.securochunk.utils.Chunk;
 import xyz.bytemonkey.securochunk.visual.Visualization;
 
@@ -28,20 +27,14 @@ import java.util.ArrayList;
 import java.util.Date;
 
 public class PlayerData {
-    // String[] builderNames zu arraylist constructor
-    public float credits = ChunkClaim.plugin.config_startCredits;
-    public float bonus = 0L;
+
+    float bonus = 0L;
     public String playerName;
-    public ArrayList<String> builderNames = new ArrayList<String>();
+    public ArrayList<String> builderNames = new ArrayList<>();
     public Date lastLogin = new Date();
     public Date firstJoin = new Date();
     public Chunk lastChunk = null;
     public Visualization currentVisualization = null;
-    public Location lastAfkCheckLocation = null;
     public boolean ignorechunks = false;
 
-    public int getCredits() {
-        return (int) credits;
-
-    }
 }

@@ -38,12 +38,12 @@ public class Abandon implements SubCommand {
                 ArrayList<Chunk> chunksInRadius = ChunkClaim.plugin.getChunksInRadius(chunk, player.getName(), radius);
                 for (Chunk chunk1 : chunksInRadius) {
                     ChunkClaim.plugin.dataStore.deleteChunk(chunk1);
-                    playerData.credits++;
+                    ChunkClaim.getEcon().depositPlayer(playerData.playerName, ChunkClaim.plugin.config_chunkCost);
                     abd++;
                 }
 
                 ChunkClaim.plugin.dataStore.savePlayerData(player.getName(), playerData);
-                player.sendMessage(ChatColor.GREEN + "" + abd + " Chunks abandoned in radius " + radius + ". Credits: " + playerData.getCredits());
+                player.sendMessage(ChatColor.GREEN + "" + abd + " Chunks abandoned in radius " + radius);
                 return true;
 
             } catch (Exception e) {
@@ -58,9 +58,9 @@ public class Abandon implements SubCommand {
                 Visualization.Apply(player, visualization);
             } else if (chunk.ownerName.equals(player.getName())) {
                 ChunkClaim.plugin.dataStore.deleteChunk(chunk);
-                playerData.credits++;
+                ChunkClaim.getEcon().depositPlayer(playerData.playerName, ChunkClaim.plugin.config_chunkCost);
                 ChunkClaim.plugin.dataStore.savePlayerData(player.getName(), playerData);
-                player.sendMessage(ChatColor.GREEN + "Chunk abandoned. Credits: " + playerData.getCredits());
+                player.sendMessage(ChatColor.GREEN + "Chunk abandoned.");
 
                 Visualization visualization = Visualization.FromChunk(chunk, location.getBlockY(), VisualizationType.Public, location);
                 Visualization.Apply(player, visualization);
