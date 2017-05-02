@@ -1,6 +1,5 @@
 package xyz.bytemonkey.securochunk.commands;
 
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -52,7 +51,7 @@ public class Next implements SubCommand {
             }
 
             int size = ChunkClaim.plugin.dataStore.chunks.size();
-            if(j >= size) {
+            if (j >= size) {
                 playerNextInfo.remove(player.getName());
                 return true;
             }

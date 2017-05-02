@@ -52,7 +52,7 @@ public class Delete implements SubCommand {
                 Chunk chunk = new Chunk(bukkitChunk.getX(), bukkitChunk.getZ(), bukkitChunk.getWorld().getName());
                 ArrayList<Chunk> chunksInRadius = ChunkClaim.plugin.getChunksInRadius(chunk, tName, radius);
 
-                for(Chunk chunk1 : chunksInRadius) {
+                for (Chunk chunk1 : chunksInRadius) {
                     ChunkClaim.plugin.dataStore.deleteChunk(chunk1);
 
                     ChunkClaim.getEcon().depositPlayer(Bukkit.getOfflinePlayer(ChunkClaim.plugin.dataStore.getPlayerData(chunk.ownerName).playerName),

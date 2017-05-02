@@ -4,15 +4,10 @@ worlds:
   - world
 protectSwitches: true
 protectContainers: true
-mobsForCredits: true
 mobPrice: 30
-startCredits: 11
-creditsPerHour: 3
-maxCredits: 30
-minModBlocks: 10
+minModBlocks: 1d0
 autoDeleteDays: 2
 nextToForce: false
 regenerateChunk: true
-
 costPerChunk: 1000
   

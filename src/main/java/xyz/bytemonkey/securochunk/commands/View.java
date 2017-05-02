@@ -14,7 +14,7 @@ import java.util.Date;
 /**
  * Created by Jack on 05/01/2017.
  */
-    public class View implements SubCommand {
+public class View implements SubCommand {
 
     @Override
     public boolean onCommand(Player player, String[] args) {

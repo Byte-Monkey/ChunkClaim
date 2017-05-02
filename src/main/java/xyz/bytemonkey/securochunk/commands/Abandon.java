@@ -22,59 +22,54 @@ public class Abandon implements SubCommand {
         PlayerData playerData = ChunkClaim.plugin.dataStore.getPlayerData(player.getName());
         Location location = player.getLocation();
 
-        if(args.length==1) {
+        if (args.length == 1) {
             int radius;
             int abd = 0;
             try {
                 radius = Integer.parseInt(args[1]);
-                if(radius<0) {
+                if (radius < 0) {
                     player.sendMessage(ChatColor.GREEN + "Error: Negative Radius");
                     return true;
                 }
-                if(radius>10) {
+                if (radius > 10) {
                     player.sendMessage(ChatColor.GREEN + "Error: Max Radius is 10.");
                     return true;
                 }
-                ArrayList<Chunk> chunksInRadius = ChunkClaim.plugin.getChunksInRadius(chunk, player.getName(),radius);
-                for(Chunk chunk1 : chunksInRadius) {
+                ArrayList<Chunk> chunksInRadius = ChunkClaim.plugin.getChunksInRadius(chunk, player.getName(), radius);
+                for (Chunk chunk1 : chunksInRadius) {
                     ChunkClaim.plugin.dataStore.deleteChunk(chunk1);
                     playerData.credits++;
                     abd++;
                 }
 
                 ChunkClaim.plugin.dataStore.savePlayerData(player.getName(), playerData);
-                player.sendMessage(ChatColor.GREEN + "" + abd + " Chunks abandoned in radius "+radius+". Credits: " + playerData.getCredits());
+                player.sendMessage(ChatColor.GREEN + "" + abd + " Chunks abandoned in radius " + radius + ". Credits: " + playerData.getCredits());
                 return true;
 
-            } catch(Exception e) {
+            } catch (Exception e) {
                 player.sendMessage(ChatColor.GREEN + "Usage: /chunk abandon [radius]");
                 return true;
             }
 
-        }
-        else {
+        } else {
             if (chunk == null) {
                 player.sendMessage(ChatColor.GREEN + "This chunk is public.");
                 Visualization visualization = Visualization.FromBukkitChunk(location.getChunk(), location.getBlockY(), VisualizationType.Public, location);
                 Visualization.Apply(player, visualization);
-            }
-
-            else if (chunk.ownerName.equals(player.getName())) {
+            } else if (chunk.ownerName.equals(player.getName())) {
                 ChunkClaim.plugin.dataStore.deleteChunk(chunk);
                 playerData.credits++;
                 ChunkClaim.plugin.dataStore.savePlayerData(player.getName(), playerData);
-                player.sendMessage(ChatColor.GREEN + "Chunk abandoned. Credits: "	+ playerData.getCredits());
+                player.sendMessage(ChatColor.GREEN + "Chunk abandoned. Credits: " + playerData.getCredits());
 
-                Visualization visualization = Visualization.FromChunk(chunk, location.getBlockY(),VisualizationType.Public, location);
+                Visualization visualization = Visualization.FromChunk(chunk, location.getBlockY(), VisualizationType.Public, location);
                 Visualization.Apply(player, visualization);
 
                 return true;
-            }
-
-            else {
+            } else {
                 if (playerData.lastChunk != chunk) {
                     playerData.lastChunk = chunk;
-                    Visualization visualization = Visualization.FromChunk(chunk, location.getBlockY(),VisualizationType.ErrorChunk, location);
+                    Visualization visualization = Visualization.FromChunk(chunk, location.getBlockY(), VisualizationType.ErrorChunk, location);
                     Visualization.Apply(player, visualization);
                 }
                 player.sendMessage(ChatColor.GREEN + "You don't own this chunk. Only "

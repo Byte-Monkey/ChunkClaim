@@ -21,25 +21,24 @@
 package xyz.bytemonkey.securochunk.utils;
 
 import com.google.common.collect.HashBasedTable;
-import xyz.bytemonkey.securochunk.utils.Chunk;
 
 public class ChunkWorld {
-	private String worldName;
-	public HashBasedTable<Integer,Integer,Chunk> chunkTable = HashBasedTable.create();
+    public HashBasedTable<Integer, Integer, Chunk> chunkTable = HashBasedTable.create();
+    private String worldName;
 
-	
-	Chunk getChunk(int x, int z) {
-		return chunkTable.get(x, z);
-	}
-	
-	
-	public void addChunk(Chunk newChunk) {
-		chunkTable.put(newChunk.x, newChunk.z,newChunk);
-	}
-	void removeChunk(Chunk chunk) {
-		chunkTable.remove(chunk.x, chunk.z);
-	}
-	public ChunkWorld(String name) {
-		this.worldName = name;
-	}
+    public ChunkWorld(String name) {
+        this.worldName = name;
+    }
+
+    Chunk getChunk(int x, int z) {
+        return chunkTable.get(x, z);
+    }
+
+    public void addChunk(Chunk newChunk) {
+        chunkTable.put(newChunk.x, newChunk.z, newChunk);
+    }
+
+    void removeChunk(Chunk chunk) {
+        chunkTable.remove(chunk.x, chunk.z);
+    }
 }

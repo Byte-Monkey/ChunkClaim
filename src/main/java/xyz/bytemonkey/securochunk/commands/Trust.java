@@ -25,7 +25,7 @@ public class Trust implements SubCommand {
             return true;
         }
 
-        if(Bukkit.getPlayer(args[0]) != null) {
+        if (Bukkit.getPlayer(args[0]) != null) {
             if (tName.equals(player.getName())) {
                 player.sendMessage(ChatColor.RED + "You don't trust yourself?");
                 return true;
@@ -46,7 +46,7 @@ public class Trust implements SubCommand {
 
         if (!playerData.builderNames.contains(tName)) {
 
-            for(Chunk chunk : chunksInRadius) {
+            for (Chunk chunk : chunksInRadius) {
                 if (!chunk.isTrusted(tName)) {
                     chunk.builderNames.add(tName);
                     ChunkClaim.plugin.dataStore.writeChunkToStorage(chunk);

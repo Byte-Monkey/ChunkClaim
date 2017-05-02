@@ -17,25 +17,35 @@ public class List implements SubCommand {
     @Override
     public boolean onCommand(Player player, String[] args) {
         if (player.hasPermission("chunkclaim.admin")) {
+            String tName = args[0];
 
             if (args.length != 1) {
                 player.sendMessage(ChatColor.RED + "Usage: /chunk list <player>");
                 return true;
             }
 
-            OfflinePlayer tp = ChunkClaim.plugin.resolvePlayer(args[1]);
-            if (tp == null) {
-                player.sendMessage(ChatColor.RED + "Player not found.");
-                return true;
+            if (Bukkit.getPlayer(args[0]) != null) {
+                if (tName.equals(player.getName())) {
+                    player.sendMessage(ChatColor.RED + "You don't trust yourself?");
+                    return true;
+                }
+            } else {
+                OfflinePlayer tp = ChunkClaim.plugin.resolvePlayer(args[0]);
+                if (tp == null) {
+                    player.sendMessage(ChatColor.RED + "Player not found.");
+                    return true;
+                }
+                if (tName.equals(player.getName())) {
+                    player.sendMessage(ChatColor.RED + "You don't trust yourself?");
+                    return true;
+                }
             }
-
-            String tName = tp.getName();
 
             ArrayList<Chunk> chunksInRadius = ChunkClaim.plugin.dataStore.getAllChunksForPlayer(tName);
 
-            long loginDays = ((new Date()).getTime() - ChunkClaim.plugin.dataStore.getPlayerData(tp.getName()).lastLogin.getTime()) / (1000 * 60 * 60 * 24);
-            long joinDays = ((new Date()).getTime() - ChunkClaim.plugin.dataStore.getPlayerData(tp.getName()).firstJoin.getTime()) / (1000 * 60 * 60 * 24);
-            String adminstring = tp.getName() + " | Last Login: " + loginDays + " days ago. First Join: " + joinDays + " days ago.";
+            long loginDays = ((new Date()).getTime() - ChunkClaim.plugin.dataStore.getPlayerData(tName).lastLogin.getTime()) / (1000 * 60 * 60 * 24);
+            long joinDays = ((new Date()).getTime() - ChunkClaim.plugin.dataStore.getPlayerData(tName).firstJoin.getTime()) / (1000 * 60 * 60 * 24);
+            String adminstring = tName + " | Last Login: " + loginDays + " days ago. First Join: " + joinDays + " days ago.";
             player.sendMessage(ChatColor.GREEN + adminstring);
 
             for (Chunk chunk : chunksInRadius) {

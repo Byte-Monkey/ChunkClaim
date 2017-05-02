@@ -46,6 +46,8 @@ import java.util.List;
 public class BlockEventHandler implements Listener {
 
     private DataStore dataStore;
+    //ensures fluids don't flow out of chunks, unless into another chunk where the owner is trusted to build
+    private Chunk lastSpreadChunk = null;
 
     public BlockEventHandler(DataStore dataStore) {
         this.dataStore = dataStore;
@@ -64,7 +66,7 @@ public class BlockEventHandler implements Listener {
 
         if (playerData.ignorechunks) return;
 
-        if(chunk == null) return;
+        if (chunk == null) return;
 
         if (!chunk.isTrusted(player.getName())) {
             ChunkClaim.plugin.sendMsg(player, "You don't have " + chunk.ownerName + "'s permission to build here.");
@@ -90,7 +92,7 @@ public class BlockEventHandler implements Listener {
         Chunk chunk = dataStore.getChunkAt(location, playerData.lastChunk);
 
         if (playerData.ignorechunks) return;
-        if(chunk == null) return;
+        if (chunk == null) return;
 
         if (!chunk.isTrusted(player.getName())) {
             ChunkClaim.plugin.sendMsg(player, "You don't have " + chunk.ownerName + "'s permission to build here.");
@@ -218,9 +220,6 @@ public class BlockEventHandler implements Listener {
         if (!ChunkClaim.plugin.config_worlds.contains(burnEvent.getBlock().getWorld().getName())) return;
         burnEvent.setCancelled(true);
     }
-
-    //ensures fluids don't flow out of chunks, unless into another chunk where the owner is trusted to build
-    private Chunk lastSpreadChunk = null;
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.LOWEST)
     public void onBlockFromTo(BlockFromToEvent spreadEvent) {

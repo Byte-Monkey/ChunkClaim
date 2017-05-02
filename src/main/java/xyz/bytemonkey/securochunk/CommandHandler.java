@@ -32,8 +32,6 @@ public class CommandHandler implements CommandExecutor {
     private void loadCommands() {
         commands.put("claim", new Claim());
         commands.put("list", new List());
-        commands.put("mark", new Mark());
-        commands.put("unmark", new Unmark());
         commands.put("next", new Next());
         commands.put("view", new View());
         commands.put("delete", new Delete());
@@ -54,7 +52,7 @@ public class CommandHandler implements CommandExecutor {
         Player player = (Player) sender;
 
         if (cmd1.getName().equalsIgnoreCase("chunk")) {
-            if(!ChunkClaim.plugin.config_worlds.contains(player.getWorld().getName())) return true;
+            if (!ChunkClaim.plugin.config_worlds.contains(player.getWorld().getName())) return true;
 
             if (args == null || args.length < 1) {
                 player.sendMessage(ChatColor.GREEN + "Version " + pdfFile.getVersion() + " by ByteMonkey");
@@ -81,7 +79,7 @@ public class CommandHandler implements CommandExecutor {
             } catch (Exception e) {
                 e.printStackTrace();
                 player.sendMessage(ChatColor.RED + "Command error.");
-                player.sendMessage(ChatColor.GREEN +  "Type /chunk help for command information");
+                player.sendMessage(ChatColor.GREEN + "Type /chunk help for command information");
             }
             return true;
         }

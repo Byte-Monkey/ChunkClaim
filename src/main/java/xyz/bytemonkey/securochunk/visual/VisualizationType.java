@@ -21,7 +21,7 @@
 package xyz.bytemonkey.securochunk.visual;
 
 public enum VisualizationType {
-	Chunk,
-	ErrorChunk,
-	Public
+    Chunk,
+    ErrorChunk,
+    Public
 }

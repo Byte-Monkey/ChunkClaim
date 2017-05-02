@@ -12,11 +12,11 @@ public class DeleteAll implements SubCommand {
 
     @Override
     public boolean onCommand(Player player, String[] args) {
-        if(!player.hasPermission("chunkclaim.admin")) {
+        if (!player.hasPermission("chunkclaim.admin")) {
             player.sendMessage(ChatColor.GREEN + "No permission.");
             return true;
         }
-        if(args.length==1) {
+        if (args.length == 1) {
             OfflinePlayer tp = ChunkClaim.plugin.resolvePlayer(args[1]);
             if (tp == null) {
 
@@ -25,10 +25,9 @@ public class DeleteAll implements SubCommand {
             }
             String tName = tp.getName();
 
-            player.sendMessage(ChatColor.GREEN + "" + ChunkClaim.plugin.dataStore.deleteChunksForPlayer(tName) +" chunks deleted.");
+            player.sendMessage(ChatColor.GREEN + "" + ChunkClaim.plugin.dataStore.deleteChunksForPlayer(tName) + " chunks deleted.");
             return true;
-        }
-        else {
+        } else {
             player.sendMessage(ChatColor.GREEN + "Usage: /chunk deleteall <player>");
             return true;
         }
