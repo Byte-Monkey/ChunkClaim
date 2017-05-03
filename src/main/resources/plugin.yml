@@ -1,6 +1,6 @@
 name: ChunkClaim
 main: xyz.bytemonkey.securochunk.ChunkClaim
-version: 1.2.5
+version: 1.0-SNAPSHOT
 author: [schmidtbochum, ByteMonkey]
 depend: [Vault]
 softdepend: [Multiverse-Core]
