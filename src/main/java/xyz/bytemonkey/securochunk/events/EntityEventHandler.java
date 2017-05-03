@@ -110,11 +110,10 @@ public class EntityEventHandler implements Listener {
 
     //when an entity is damaged
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
-    public void onEntityDamage(EntityDamageEvent event) {
+    public void onEntityDamage(EntityDamageByEntityEvent event) {
 
         if (!ChunkClaim.plugin.config_worlds.contains(event.getEntity().getWorld().getName())) return;
         //only actually interested in entities damaging entities (ignoring environmental damage)
-        if (!(event instanceof EntityDamageByEntityEvent)) return;
 
         //monsters are never protected
         if (event.getEntity() instanceof Monster) return;
@@ -137,33 +136,38 @@ public class EntityEventHandler implements Listener {
                 attacker = (Player) potion.getShooter();
             }
         }
+
+        Chunk cachedChunk = null;
+        PlayerData playerData = null;
+        if (attacker != null) {
+            playerData = this.dataStore.getPlayerData(attacker.getName());
+            cachedChunk = playerData.lastChunk;
+        }
+        Chunk chunk = dataStore.getChunkAt(event.getEntity().getLocation(), cachedChunk);
+
+        if(event.getDamager() != null && chunk != null)
+            if(!ChunkClaim.plugin.config_pvpChunk) {
+                event.setCancelled(true);
+                return;
+            }
+
         //FEATURE: protect claimed animals, boats, minecarts
-        if (event instanceof EntityDamageByEntityEvent) {
-            //if the entity is an non-monster creature (remember monsters disqualified above), or a vehicle
-            if ((subEvent.getEntity() instanceof Creature)) {
-                Chunk cachedChunk = null;
-                PlayerData playerData = null;
-                if (attacker != null) {
-                    playerData = this.dataStore.getPlayerData(attacker.getName());
-                    cachedChunk = playerData.lastChunk;
-                }
-                Chunk chunk = dataStore.getChunkAt(event.getEntity().getLocation(), cachedChunk);
+        //if the entity is an non-monster creature (remember monsters disqualified above), or a vehicle
+        if ((subEvent.getEntity() instanceof Creature)) {
 
-                //if it's claimed
-                if (chunk != null) {
-                    if (attacker == null) {
+            //if it's claimed
+            if (chunk != null) {
+                if (attacker == null)
+                    event.setCancelled(true);
+                else {
+                    if (!chunk.isTrusted(attacker.getName())) {
                         event.setCancelled(true);
-                    } else {
-                        if (!chunk.isTrusted(attacker.getName())) {
-                            event.setCancelled(true);
-                            ChunkClaim.plugin.sendMsg(attacker, "Not permitted.");
-                        }
-                        //cache claim for later
-                        if (playerData != null) {
-                            playerData.lastChunk = chunk;
-                        }
-
+                        ChunkClaim.plugin.sendMsg(attacker, "Not permitted.");
                     }
+                    //cache claim for later
+                    if (playerData != null)
+                        playerData.lastChunk = chunk;
+
                 }
 
             }

@@ -47,13 +47,8 @@ public class ChunkClaim extends JavaPlugin {
     private static Economy econ = null;
     public DataStore dataStore;
     public List<String> config_worlds;
-    public boolean config_protectContainers;
-    public boolean config_protectSwitches;
-    public int config_mobPrice;
-    public int config_minModBlocks;
-    private boolean config_regenerateChunk;
-    public float config_autoDeleteDays;
-    public int config_chunkCost;
+    public boolean config_protectContainers, config_regenerateChunk, config_pvpChunk, config_protectSwitches, config_nextToForce;
+    public int config_mobPrice, config_minModBlocks, config_chunkCost;
 
     public static void addLogEntry(String entry) {
         logger.info("ChunkClaim: " + entry);
@@ -82,9 +77,10 @@ public class ChunkClaim extends JavaPlugin {
         this.config_protectContainers = this.getConfig().getBoolean("protectContainers");
         this.config_mobPrice = this.getConfig().getInt("mobPrice");
         this.config_minModBlocks = this.getConfig().getInt("minModBlocks");
-        this.config_autoDeleteDays = (float) this.getConfig().getDouble("autoDeleteDays");
 		this.config_regenerateChunk = this.getConfig().getBoolean("regenerateChunk");
 		this.config_chunkCost = this.getConfig().getInt("costPerChunk");
+		this.config_pvpChunk = this.getConfig().getBoolean("pvpChunk");
+		this.config_nextToForce = this.getConfig().getBoolean("nextToForce");
 
         try {
             this.dataStore = new FlatFileDataStore();

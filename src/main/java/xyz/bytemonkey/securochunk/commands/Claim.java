@@ -33,7 +33,7 @@ public class Claim implements SubCommand {
             }
             if (ChunkClaim.getEcon().getBalance(player) >= ChunkClaim.plugin.getConfig().getInt("costPerChunk")) {
 
-                if (!player.hasPermission("chunkclaim.admin")) {
+                if (ChunkClaim.plugin.config_nextToForce && !player.hasPermission("chunkclaim.admin")) {
                     ArrayList<Chunk> playerChunks = ChunkClaim.plugin.dataStore.getAllChunksForPlayer(playerName);
 
                     if (playerChunks.size() > 0)
@@ -50,12 +50,12 @@ public class Claim implements SubCommand {
                 playerData.lastChunk = newChunk;
                 ChunkClaim.plugin.dataStore.savePlayerData(playerName, playerData);
 
-                player.sendMessage(ChatColor.RED + "You claimed this chunk.");
+                player.sendMessage(ChatColor.GREEN + "You claimed this chunk.");
 
                 Visualization visualization = Visualization.FromChunk(newChunk, location.getBlockY(), VisualizationType.Chunk, location);
                 Visualization.Apply(player, visualization);
             } else {
-                player.sendMessage(ChatColor.RED + "Not enough credits to claim this chunk.");
+                player.sendMessage(ChatColor.RED + "Not enough money to claim this chunk.");
 
                 if (playerData.lastChunk != chunk) {
                     playerData.lastChunk = chunk;
