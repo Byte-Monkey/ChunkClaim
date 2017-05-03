@@ -1,11 +1,8 @@
 # ChunkClaim Configuration File. 
-# Visit http://dev.bukkit.org/server-mods/chunkclaim/pages/configuration/
 worlds:
   - world
 protectSwitches: true
 protectContainers: true
-mobPrice: 30
-minModBlocks: 1d0
 nextToForce: true
 regenerateChunk: false
 pvpChunk: false

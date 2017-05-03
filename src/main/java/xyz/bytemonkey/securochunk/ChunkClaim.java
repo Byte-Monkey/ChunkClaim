@@ -48,7 +48,7 @@ public class ChunkClaim extends JavaPlugin {
     public DataStore dataStore;
     public List<String> config_worlds;
     public boolean config_protectContainers, config_regenerateChunk, config_pvpChunk, config_protectSwitches, config_nextToForce;
-    public int config_mobPrice, config_minModBlocks, config_chunkCost;
+    public int config_chunkCost;
 
     public static void addLogEntry(String entry) {
         logger.info("ChunkClaim: " + entry);
@@ -75,8 +75,6 @@ public class ChunkClaim extends JavaPlugin {
         this.config_worlds = this.getConfig().getStringList("worlds");
         this.config_protectSwitches = this.getConfig().getBoolean("protectSwitches");
         this.config_protectContainers = this.getConfig().getBoolean("protectContainers");
-        this.config_mobPrice = this.getConfig().getInt("mobPrice");
-        this.config_minModBlocks = this.getConfig().getInt("minModBlocks");
 		this.config_regenerateChunk = this.getConfig().getBoolean("regenerateChunk");
 		this.config_chunkCost = this.getConfig().getInt("costPerChunk");
 		this.config_pvpChunk = this.getConfig().getBoolean("pvpChunk");

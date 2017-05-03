@@ -111,29 +111,6 @@ public class Chunk {
         }
     }
 
-    public void modify() {
-
-        if (this.modifiedBlocks < 0) {
-            return;
-        } else {
-            this.modifiedBlocks++;
-            if (this.modifiedBlocks >= ChunkClaim.plugin.config_minModBlocks) {
-                this.modifiedBlocks = -1;
-            }
-            ChunkClaim.plugin.dataStore.writeChunkToStorage(this);
-        }
-    }
-
-    public void mark() {
-        this.modifiedBlocks = 0;
-        ChunkClaim.plugin.dataStore.writeChunkToStorage(this);
-    }
-
-    public void unmark() {
-        this.modifiedBlocks = -1;
-        ChunkClaim.plugin.dataStore.writeChunkToStorage(this);
-    }
-
     public boolean isTrusted(String playerName) {
         if (this.builderNames.contains(playerName) || this.ownerName.equals(playerName) || ChunkClaim.plugin.dataStore.getPlayerData(playerName).ignorechunks) {
             return true;

@@ -50,7 +50,7 @@ public class List implements SubCommand {
 
             for (Chunk chunk : chunksInRadius) {
                 adminstring = "ID: " + chunk.x + "|" + chunk.z + "(" + (chunk.x * 16) + "|" + (chunk.z * 16) + ")";
-                adminstring += ", Permanent: " + (chunk.modifiedBlocks < 0 ? "true" : ("false (" + chunk.modifiedBlocks + ")"));
+//                adminstring += ", Permanent: " + (chunk.modifiedBlocks < 0 ? "true" : ("false (" + chunk.modifiedBlocks + ")"));
                 player.sendMessage(ChatColor.GREEN + adminstring);
             }
         }
